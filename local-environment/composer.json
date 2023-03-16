@@ -1,0 +1,15 @@
+{
+    "name": "student/composer-basics",
+    "description": "An introduction to composer",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Student",
+            "email": "student@students.salle.url.edu"
+        }
+    ],
+    "require": {
+        "fzaninotto/faker": "^1.5",
+        "guzzlehttp/guzzle":"^7.5"
+    }
+}
