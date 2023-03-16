@@ -1,14 +1,6 @@
 <?php
-/*
-Server: sql7.freemysqlhosting.net
-Name: sql7605255
-Username: sql7605255
-Password: ngRS3aGLYw
-Port number: 3306
-*/
-
 session_start();
-
+$valid = True;
 foreach (glob("Classes/*.php") as $filename) {  // include Classes directory
     include $filename;
 }
@@ -36,8 +28,41 @@ function isPwdValid($pwd): bool{  // validate password
         return true;
 }
 
-?>
+if( !isEmailValid($currentUser->getEmail()) && $currentUser->getEmail() != "blank"){
+    $valid = false;
+}else
+    $valid=true;
 
+if( !isPwdValid($currentUser->getPassword()) && $currentUser->getPassword() != "blank"){
+    $valid = false;
+}else
+    $valid=true;
+
+
+if ($valid){
+    $user ='sql7605255';
+    $pass = 'ngRS3aGLYw';
+    $db = new PDO("mysql:host=sql7.freemysqlhosting.net;dbname=sql7605255",$user,$pass);
+    $statement = $db->prepare('SELECT count(distinct(user.id)) FROM user WHERE name=? AND pwd=?');
+    $statement->bindParam(1,$email, PDO::PARAM_STR);
+    $statement->bindParam(2,$pwd,PDO::PARAM_STR);
+    $statement->execute();
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    if($results[0]["count(distinct(user.id))"] > 0){
+        header("Location: home.php");
+    }
+
+}
+
+/*
+Server: sql7.freemysqlhosting.net
+Name: sql7605255
+Username: sql7605255
+Password: ngRS3aGLYw
+Port number: 3306
+*/
+?>
 <!DOCTYPE html>
 <html lang="en">
 <body>
@@ -50,27 +75,18 @@ function isPwdValid($pwd): bool{  // validate password
         <form action="login.php" method="POST" accept-charset="utf-8">
             <div class="emailInput">
                 <input required value="" name = "email"  placeholder="email" >
-                <?php
-                if( !isEmailValid($currentUser->getEmail()) && $currentUser->getEmail() != "blank"){
-                    echo '<p> Enter a valid email </p>';
-                    $valid = false;
-                }else
-                    $valid=true; ?>
+
                 <span class="error"></span>
             </div>
             <div class="passwordInput">
                 <input name = "pwd" type="password" placeholder="password">
                 <?php
-                if( !isPwdValid($currentUser->getPassword()) && $currentUser->getPassword() != "blank"){
-                    echo '<p> Enter a valid password </p>';
-                    $valid = false;
-                }else
-                    $valid=true; ?>
+                if($valid == False){
+                    echo '<p>Invalid credentials</p>';
+                }
+                ?>
             </div>
-
                 <button class= "submit" type="submit">SUBMIT</button>
-
-
             <div class="signUpLink">
                 <p>Don't have an account?  <a  class="signUpLink" href="signUp.php"> Register here </a> </p>
             </div>
@@ -87,6 +103,13 @@ function isPwdValid($pwd): bool{  // validate password
 
   form {
       margin-bottom: 20%;
+  }
+
+  p{
+      font-family: "Courier New", serif;
+      display: flex;
+      justify-content: center;
+      color: black;
   }
 
   .signUpLink p{
@@ -191,25 +214,5 @@ function isPwdValid($pwd): bool{  // validate password
 </html>
 
 <?php
-if ($valid){
-    $user ='sql7605255';
-    $pass = 'ngRS3aGLYw';
-    $db = new PDO("mysql:host=sql7.freemysqlhosting.net;dbname=sql7605255",$user,$pass);
-    $statement = $db->prepare('SELECT count(distinct(user.id)) FROM user WHERE name=? AND pwd=?');
-    $statement->bindParam(1,$email, PDO::PARAM_STR);
-    $statement->bindParam(2,$pwd,PDO::PARAM_STR);
-    $statement->execute();
-    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    var_dump($results);
-
-    if($results["count(distinct(user.id))"] > 0){
-        header("Location: home.php");
-        echo '<meta http-equiv="refresh" content="0; url=home.php">';
-    }
-
-    if($email != "" && $pwd != ""){
-        $query = "select count(*) as cntUser from users where name='".$email."' and pwd='".$pwd."'";
-    }
-}
 ?>
