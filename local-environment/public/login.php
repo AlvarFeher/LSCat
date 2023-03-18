@@ -50,6 +50,7 @@ if ($valid){
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     if($results[0]["count(distinct(user.id))"] > 0){
+        $_SESSION['name'] = $currentUser->getEmail();
         header("Location: home.php");
     }
 

@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once "../vendor/autoload.php";
 
 use GuzzleHttp\Client;
@@ -14,10 +14,12 @@ function storeSearchDB(){
     if(!empty($_POST['search'])){
         $search = $_POST['search'];
     }
-    $userMail = '"root@root.com"';
+    $userMail = $_SESSION['name'];
     $user ='sql7605255';
     $pass = 'ngRS3aGLYw';
     $db = new PDO("mysql:host=sql7.freemysqlhosting.net;dbname=sql7605255",$user,$pass);
+
+
 
     $statement = $db->prepare('INSERT INTO SEARCH_STRINGS(email,search) values (:email,:search)');
     $statement->bindParam(':email', $userMail, PDO::PARAM_STR);
