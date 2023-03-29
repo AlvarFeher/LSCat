@@ -13,10 +13,10 @@ function catApiRequest($breed_id){
 function storeSearchDB(){
     if(!empty($_POST['search'])){
         $search = $_POST['search'];
+    }else{
+        $search = "hola";
     }
     $userMail = $_SESSION['name'];
-    $user ='sql7605255';
-    $pass = 'ngRS3aGLYw';
     $db = new PDO('mysql:host=db;dbname=LSCat', 'root', 'admin', []);
     $date = date("Y-m-d H:i:s");
     $statement = $db->prepare('INSERT INTO Search(query,timestamp) values (:search,:time)');

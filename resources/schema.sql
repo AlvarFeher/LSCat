@@ -17,7 +17,7 @@ CREATE TABLE `Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `CatSearch`;
-CREATE TABLE `Search` (
+CREATE TABLE `CatSearch` (
     `cat_search_id` INT NOT NULL AUTO_INCREMENT,
     `query` VARCHAR(255) NOT NULL,
     `timestamp` DATETIME NOT NULL,
@@ -30,5 +30,5 @@ CREATE TABLE `UserHistory` (
     `cat_search_id` INT NOT NULL,
     PRIMARY KEY(user_id, cat_search_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
-	FOREIGN KEY (cat_search_id) REFERENCES Search(cat_search_id)
+	FOREIGN KEY (cat_search_id) REFERENCES CatSearch(cat_search_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

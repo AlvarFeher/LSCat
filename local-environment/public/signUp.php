@@ -28,13 +28,11 @@ function isPwdValid($pwd): bool{
 }
 
 if($valid){
-    $user ='sql7605255';
-    $pass = 'ngRS3aGLYw';
     $currentDate = date("Y-m-d H:i:s");
     $db = new PDO('mysql:host=db;dbname=LSCat', 'root', 'admin', []);
     $statement = $db->prepare("INSERT INTO Users (email, password, created_at, updated_at) VALUES(:email, :password, :currdate, :update)");
-    $statement->bindParam(':name', $email, PDO::PARAM_STR);
-    $statement->bindParam(':pwd', $pwd, PDO::PARAM_STR);
+    $statement->bindParam(':email', $email, PDO::PARAM_STR);
+    $statement->bindParam(':password', $pwd, PDO::PARAM_STR);
     $statement->bindParam(':currdate', $currentDate, PDO::PARAM_STR);
     $statement->bindParam(':update', $currentDate, PDO::PARAM_STR);
     $statement->execute();

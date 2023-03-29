@@ -4,17 +4,16 @@ $valid = True;
 foreach (glob("Classes/*.php") as $filename) {  // include Classes directory
     include $filename;
 }
-
-if(empty($_POST['email']) || empty($_POST['pwd'])){  // initialize vars
+if(empty($_POST['email']) || empty($_POST['password'])){  // initialize vars
     $email = 'blank';
-    $pwd = 'blank';
+    $password = 'blank';
 }else{
     $email = $_POST['email'];
-    $pwd = $_POST['pwd'];
+    $password = $_POST['password'];
 }
 $currentUser = new \Classes\User();
 $currentUser->setEmail($email);
-$currentUser->setPassword($pwd);
+$currentUser->setPassword($password);
 
 function isEmailValid($email){ // validate email
     return filter_var($email, FILTER_VALIDATE_EMAIL);
@@ -38,29 +37,18 @@ if( !isPwdValid($currentUser->getPassword()) && $currentUser->getPassword() != "
 }else
     $valid=true;
 
-
 if ($valid){
     $db = new PDO('mysql:host=db;dbname=LSCat', 'root', 'admin', []);
-    $statement = $db->prepare('SELECT count(distinct(user.id)) FROM Users WHERE email=? AND password=?');
+    $statement = $db->prepare('SELECT count(distinct(Users.user_id)) FROM Users WHERE email=? AND password=?');
     $statement->bindParam(1,$email, PDO::PARAM_STR);
     $statement->bindParam(2,$password,PDO::PARAM_STR);
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-    if($results[0]["count(distinct(Users.user_id))"] > 0){
+    if((int)$results[0]["count(distinct(Users.user_id))"] > 0){
         $_SESSION['name'] = $currentUser->getEmail();
         header("Location: home.php");
     }
-
 }
-
-/*
-Server: sql7.freemysqlhosting.net
-Name: sql7605255
-Username: sql7605255
-Password: ngRS3aGLYw
-Port number: 3306
-*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,7 +66,7 @@ Port number: 3306
                 <span class="error"></span>
             </div>
             <div class="passwordInput">
-                <input name = "pwd" type="password" placeholder="password">
+                <input name = "password" type="password" placeholder="password">
                 <?php
                 if($valid == False){
                     echo '<p>Invalid credentials</p>';
