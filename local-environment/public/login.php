@@ -40,16 +40,14 @@ if( !isPwdValid($currentUser->getPassword()) && $currentUser->getPassword() != "
 
 
 if ($valid){
-    $user ='sql7605255';
-    $pass = 'ngRS3aGLYw';
-    $db = new PDO("mysql:host=sql7.freemysqlhosting.net;dbname=sql7605255",$user,$pass);
-    $statement = $db->prepare('SELECT count(distinct(user.id)) FROM user WHERE name=? AND pwd=?');
+    $db = new PDO('mysql:host=db;dbname=LSCat', 'root', 'admin', []);
+    $statement = $db->prepare('SELECT count(distinct(user.id)) FROM Users WHERE email=? AND password=?');
     $statement->bindParam(1,$email, PDO::PARAM_STR);
-    $statement->bindParam(2,$pwd,PDO::PARAM_STR);
+    $statement->bindParam(2,$password,PDO::PARAM_STR);
     $statement->execute();
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    if($results[0]["count(distinct(user.id))"] > 0){
+    if($results[0]["count(distinct(Users.user_id))"] > 0){
         $_SESSION['name'] = $currentUser->getEmail();
         header("Location: home.php");
     }
